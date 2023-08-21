@@ -64,7 +64,7 @@ functions = dict()
 
 def evaluate(args):
     if not args:
-        return []
+        return ""
     func_name, args = args
     print(f"{func_name=} and {args=}")
     if func_name == 'func':
@@ -83,4 +83,4 @@ def evaluate(args):
             if type(i) == str:
                 return i.format(*args)
             if type(i) == list:
-                return evaluate(i)
+                return evaluate(i).format(*arts)
