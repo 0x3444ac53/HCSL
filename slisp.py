@@ -10,7 +10,9 @@ tokens = ('ID',  # var name
 
 
 schar = r'a-zA-Z_0-9\$\*\{\}\','
-t_STRING = r'"([^"]*?)"'
+#t_STRING = r'"([^"]*?)"'
+t_STRING = r'"(?:\\"|[^"])*"'
+#"((?:\\"|[^"])*)"
 t_ID = '[%s][%s]*' % (schar, schar)
 t_LPAREN = r'\('
 t_RPAREN = r'\)'
@@ -64,15 +66,19 @@ def evaluate(args):
     if not args:
         return []
     func_name, args = args
-    print(f"{func_name=} and {args=}")
     if func_name == 'func':
         functions[args[0]] = args[1:]
         return functions[args[0]]
+    elif func_name == 'exit':
+        try:
+            exit(int(args[0]))
+        except IndexError:
+            exit(0)
     elif func_name in functions.keys():
         o = []
         for i in functions[func_name]:
-            print(f"{i=}")
             if type(i) == str:
+                print(f"{i=} {args=}")
                 o.append(i.format(*args))
             if type(i) == list:
                 o.append(evaluate(i))
