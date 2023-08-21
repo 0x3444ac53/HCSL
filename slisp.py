@@ -83,4 +83,4 @@ def evaluate(args):
             if type(i) == str:
                 return i.format(*args)
             if type(i) == list:
-                return evaluate(i).format(*arts)
+                return evaluate(i).format(*args)
