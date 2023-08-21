@@ -25,8 +25,6 @@ def runFile(filePath):
         for line in f.readlines():
             a = execute(line)
             print(a)
-            #if type(a) == str:
-            #    print(a)
 
 if __name__ == "__main__":
     if not not len(sys.argv[1:]):

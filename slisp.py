@@ -66,6 +66,7 @@ def evaluate(args):
     if not args:
         return []
     func_name, args = args
+    print(f"{func_name=} and {args=}")
     if func_name == 'func':
         functions[args[0]] = args[1:]
         return functions[args[0]]
@@ -75,11 +76,13 @@ def evaluate(args):
         except IndexError:
             exit(0)
     elif func_name in functions.keys():
+        print("HERE!")
         o = []
         for i in functions[func_name]:
             print(f"{i=} {args=}")
             if type(i) == str:
-                o.append(i.format(*args))
+                return i.format(*args)
             if type(i) == list:
-                o.append(evaluate(i))
-        return "".join(o)
+                return evaluate(i).format(*args)
+        return 
+
