@@ -1,66 +1,23 @@
-from ply.lex import lex
-from ply.yacc import yacc
+from parser import parser
+import subprocess
 
-# Define the lexer
-tokens = ('ID',  # var name
-          'RPAREN',     #)
-          'LPAREN',     #(
-          'STRING',     #"
-          )
+def define_function(function_def):
+    functions[function_def[0]] = function_def[1:]
+    return functions[function_def[0]]
 
+def run_file(args, file=False, join=''):
+    if file:
+        with open(args) as target:
+            script = target.read()
+    else:
+        script = args
+    process = subprocess.run(script,
+                             shell=True, 
+                             text=True, 
+                             capture_output=True)
+    return process.stdout
 
-schar = r'a-zA-Z_0-9\$\*\{\}\','
-t_STRING = r'"([^"]*?)"'
-t_ID = '[%s][%s]*' % (schar, schar)
-t_LPAREN = r'\('
-t_RPAREN = r'\)'
-
-t_ignore = ' \t\n'
-
-def t_error(t):
-    print("Illegal character '%s'" % t.value[0])
-    t.lexer.skip(1)
-
-lexer = lex()
-
-def p_expression(p):
-    '''
-    expression : LPAREN ID arguments RPAREN
-               | LPAREN lisperal RPAREN
-               | LPAREN expression RPAREN
-    '''
-    p[0] = [p[2], p[3]]
-
-def p_arguments(p):
-    'arguments : argument arguments'
-    p[0] = [p[1]] + p[2]
-
-def p_arguments_empty(p):
-    'arguments :'
-    p[0] = []
-
-def p_argument(p):
-    '''
-    argument : ID
-             | expression
-             | lisperal 
-    '''
-    p[0] = p[1]
-
-def p_lisperal(p):
-    '''
-    lisperal : STRING
-             | ID
-    '''
-    p[0] = p[1].replace('"', '')
-
-def p_error(p):
-    print("Syntax error at '%s'" % p.value)
-
-parser = yacc()
-
-functions = dict()
-
+def print_functions(): print(functions)
 
 def evaluate(args):
     if not args:
@@ -68,20 +25,27 @@ def evaluate(args):
     if type(args) == str:
         return args
     func_name, args = args
-    if func_name == 'func':
-        functions[args[0]] = args[1:]
-        return functions[args[0]]
-    elif func_name == 'exit':
-        try:
-            exit(int(args[0]))
-        except IndexError:
-            exit(0)
+
+    try:
+        return functions[func_name](args)
+    except TypeError:
+        pass
     try:
         function_def = functions[func_name][0]
     except KeyError:
         print(f"undefined function {func_name}")
+    
     args = [evaluate(i) for i in args]
+    
     if type(function_def) == str:
         return function_def.format(*args)
     if type(function_def) == list:
         return evaluate(function_def).format(*args)
+
+functions = {
+        "func"    : lambda x: define_function(x),  # function_def
+        "exit"    : lambda x: exit(int(*x)),        # repl exit
+        "execute" : lambda x: run_file(*x, file=True),
+        "eval"    : lambda x: run_file(*x),
+        "debug"   : lambda : print_functions()
+    }
