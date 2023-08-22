@@ -41,4 +41,5 @@ I recognise that this may be a difficult transition for some (and we know all ab
 - [Crafting Interpreters](https://craftinginterpreters.com/) by [Bob Nystrom](https://github.com/munificent) for introducing me to little languages
 - My cat, [Ajax](https://www.instagram.com/p/CvT5ztQgaPs/), for reminding me to stretch
 - My faithful companion, [Chester](https://www.instagram.com/p/CusjwW4AKO6/) for 13 wonderful years (so far)
+- Erik Decker, for answering my calls more often than he should, and because he wanted to be acknowledged
 
