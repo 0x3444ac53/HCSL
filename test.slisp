@@ -1,3 +1,4 @@
-(func atag "<a href={0} class={1}>{2}</a>")
+(func atag "<a href='{0}' class='{1}'>{2}</a>")
 (func page (atag {0} "pages" {1}))
-(page "shit" "fuck me please")
+(func li "<li>{0}</li>")
+(li (page "./writing" "My writing"))

@@ -6,7 +6,11 @@ import sys
 
 def execute(text):
     parsed = slisp.parser.parse(text)
-    return slisp.evaluate(parsed)
+    evald = slisp.evaluate(parsed)
+    if type(evald) == str and evald != 'None': 
+        return evald + '\n'
+    else:
+        return ''
 
 def repl():
     while True:
@@ -24,7 +28,7 @@ def runFile(filePath):
     with open(filePath) as f:
         for line in f.readlines():
             a = execute(line)
-            print(a)
+            print(a, end='')
 
 if __name__ == "__main__":
     if not not len(sys.argv[1:]):
