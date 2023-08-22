@@ -27,6 +27,7 @@ def p_expression(p):
     '''
     expression : LPAREN ID arguments RPAREN
                | LPAREN lisperal RPAREN
+               | LPAREN expression RPAREN
     '''
     p[0] = [p[2], p[3]]
 
@@ -60,11 +61,13 @@ parser = yacc()
 
 functions = dict()
 
+
 def evaluate(args):
     if not args:
         return ""
+    if type(args) == str:
+        return args
     func_name, args = args
-    print(f"{func_name=} and {args=}")
     if func_name == 'func':
         functions[args[0]] = args[1:]
         return functions[args[0]]
@@ -73,11 +76,12 @@ def evaluate(args):
             exit(int(args[0]))
         except IndexError:
             exit(0)
-    elif func_name in functions.keys():
-        print("HERE!")
-        for i in functions[func_name]:
-            print(f"{i=} {args=}")
-            if type(i) == str:
-                return i.format(*args)
-            if type(i) == list:
-                return evaluate(i).format(*args)
+    try:
+        function_def = functions[func_name][0]
+    except KeyError:
+        print(f"undefined function {func_name}")
+    args = [evaluate(i) for i in args]
+    if type(function_def) == str:
+        return function_def.format(*args)
+    if type(function_def) == list:
+        return evaluate(function_def).format(*args)
