@@ -1,6 +1,5 @@
 # Hand Coded Stringy lisp
 
-Unlike most women, I appreciate the value of hard work. 
 
 ## The Story
 
