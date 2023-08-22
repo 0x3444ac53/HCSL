@@ -11,8 +11,6 @@ tokens = ('ID',  # var name
 
 schar = r'a-zA-Z_0-9\$\*\{\}\','
 t_STRING = r'"([^"]*?)"'
-#t_STRING = r'"(?:\\"|[^"])*"'
-#"((?:\\"|[^"])*)"
 t_ID = '[%s][%s]*' % (schar, schar)
 t_LPAREN = r'\('
 t_RPAREN = r'\)'
@@ -53,7 +51,7 @@ def p_lisperal(p):
     lisperal : STRING
              | ID
     '''
-    p[0] = p[1]
+    p[0] = p[1].replace('"', '')
 
 def p_error(p):
     print("Syntax error at '%s'" % p.value)
@@ -77,7 +75,6 @@ def evaluate(args):
             exit(0)
     elif func_name in functions.keys():
         print("HERE!")
-        o = []
         for i in functions[func_name]:
             print(f"{i=} {args=}")
             if type(i) == str:
