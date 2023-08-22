@@ -4,13 +4,13 @@ Unlike most women, I appreciate the value of hard work.
 
 ## The Story
 
-I was displeased with the way our culture pushes us towards large, complex templating engines that offer little to no arbitrary code execution, too many `%`'s and a frustrating amount of overhead. [Jinja](https://jinja.palletsprojects.com/en/3.1.x/) has loops, ints, native python types, "functions", and (possibly, idk I didn't check) recursion (it probably does). All I want to do is replace one string with another string, and it shouldn't be that hard. [Bash seemed like the perfect tool](https://github.com/0x3444ac53/Not-Important), until you realise all the hoops one must just through to have [recursive evaluation in a heredoc](https://github.com/0x3444ac53/Not-Important/blob/master/src/articles.html.sh#L21). Not to mention the difficulty of trying to [execute a python script](https://github.com/0x3444ac53/Not-Important/blob/master/main#L22) without having to create another file. 
+I was displeased with the way our culture pushes us towards large, complex templating engines that offer little to no arbitrary code execution, too many `%`'s and a frustrating amount of overhead. [Jinja](https://jinja.palletsprojects.com/en/3.1.x/) has loops, ints, native python types, "functions", and (possibly, idk I didn't check) recursion (it probably does). All I want to do is replace one string with another string, and it shouldn't be that hard. [Bash seemed like the perfect tool](https://github.com/0x3444ac53/Not-Important), until you realise all the hoops one must jump through to have [recursive evaluation in a heredoc](https://github.com/0x3444ac53/Not-Important/blob/master/src/articles.html.sh#L21). Not to mention the difficulty of trying to [execute a python script](https://github.com/0x3444ac53/Not-Important/blob/master/main#L22) without having to create another file. 
 
-I have taken it upon myself to solve this problem for all programmers that fell victim to the computer-science-drop-out-to-finance-bitch pipeline, and created [HCSL](https://github.com/0x3444ac53/HCSL). 
+I have taken it upon myself to solve this problem for all programmers that fell victim to the computer-science-drop-out-to-finance-bitch pipeline, and created a [Hand Coded Stringy Lisp](https://github.com/0x3444ac53/HCSL). 
 
 ## The Last Language you'll ever ~~want~~ need
 
-All functions evaluate to a lisperal™, there are no variables, only functions that return lisperals. Functions are defined using the `func` builtin, which takes two arguments, a id and a lisperal™
+All functions evaluate to a lisperal™, there are no variables, only functions that return lisperal™s. Functions are defined using the `func` builtin, which takes two arguments, a id and a lisperal™
 
 ```lisp
 (func foo "{0} {1}")
