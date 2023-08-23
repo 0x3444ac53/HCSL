@@ -6,7 +6,6 @@ import sys
 
 def execute(text):
     parsed = slisp.parser.parse(text)
-    print(parsed)
     evald = slisp.evaluate(parsed)
     if type(evald) == str and evald != 'None': 
         return evald + '\n'

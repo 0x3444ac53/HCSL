@@ -20,8 +20,6 @@ def run_file(args, file=False, join=''):
 def print_functions(): print(functions)
 
 def slisp_map(function, slist, sep='\n', join='\n'):
-    print(
-        f"{function=}\n{slist=}\n{sep=}")
     function_def = functions[function][0]
     iterate_on = evaluate(slist).split(sep)
     return join.join(
