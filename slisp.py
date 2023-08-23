@@ -19,13 +19,21 @@ def run_file(args, file=False, join=''):
 
 def print_functions(): print(functions)
 
+def slisp_map(function, slist, sep='\n', join='\n'):
+    print(
+        f"{function=}\n{slist=}\n{sep=}")
+    function_def = functions[function][0]
+    iterate_on = evaluate(slist).split(sep)
+    return join.join(
+            map(function_def.format,
+                filter(lambda x: x, iterate_on)))
+    
 def evaluate(args):
     if not args:
         return ""
     if type(args) == str:
         return args
     func_name, args = args
-
     try:
         return functions[func_name](args)
     except TypeError:
@@ -47,5 +55,6 @@ functions = {
         "exit"    : lambda x: exit(int(*x)),        # repl exit
         "execute" : lambda x: run_file(*x, file=True),
         "eval"    : lambda x: run_file(*x),
-        "debug"   : lambda : print_functions()
+        "debug"   : lambda : print_functions(),
+        "map"     : lambda x: slisp_map(*x)
     }

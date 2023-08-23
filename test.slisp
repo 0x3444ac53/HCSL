@@ -1,4 +1,5 @@
 (func atag "<a href='{0}' class='{1}'>{2}</a>")
 (func page (atag {0} "pages" {1}))
 (func li "<li>{0}</li>")
-(li (page "./writing" "My writing"))
+(func ul "<ul>{0}</ul>")
+(ul (map li (eval "cat test.slisp")))
