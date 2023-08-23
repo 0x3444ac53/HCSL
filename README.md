@@ -24,14 +24,34 @@ There are no `ints`, `floats`, or any of those mathy things that made you hate l
 I recognise that this may be a difficult transition for some (and we know all about those),  and that edge cases may arise that require something other than strings. So, I have graciously included some built-in functions to aid those that have not yet ascended to a higher plane:
 
 ```lisp
-(exit "1")		      ; -> exits with exitcode 1
-          			  ; not very useful in scripts, 
-		  			  ; but handy in the repl
+(exit "1")            ; -> exits with exitcode 1
+                      ; not very useful in scripts, 
+                      ; but handy in the repl
 
 (execute "file name") ; will execute a file on your disk
 (eval "bash_code")    ; if you must
 (debug)               ; prints functions definitions
+(map)                 ; see below
 ```
+
+## map
+There is one other built in, which is a map function, best explained by example
+```lisp
+; filename: map_exmaple.slisp
+(func ul "<ul>{0}</ul>")
+(func li "<li>{0}</li>")
+(ul (map li (eval "cat map_exmaple.slisp")))
+```
+will print:
+```
+<ul><li>(func atag "<a href='{0}' class='{1}'>{2}</a>")</li>
+<li>(func page (atag {0} "pages" {1}))</li>
+<li>(func li "<li>{0}</li>")</li>
+<li>(func ul "<ul>{0}</ul>")</li>
+<li>(ul (map li (eval "cat test.slisp")))</li></ul>
+```
+syntax is `(map func_name expression [sep=\n] [joiner=\n])`. So you can specify how it splits the string it iterates on, and also specify what string is used to rejoin it. I would like to pretend this is robust and perfectly implented, but this Language only has strings, so it's application is fairly limited. 
+
 
 # Acknowledgments
 
@@ -41,4 +61,4 @@ I recognise that this may be a difficult transition for some (and we know all ab
 - My cat, [Ajax](https://www.instagram.com/p/CvT5ztQgaPs/), for reminding me to stretch
 - My faithful companion, [Chester](https://www.instagram.com/p/CusjwW4AKO6/) for 13 wonderful years (so far)
 - Erik Decker, for answering my calls more often than he should, and because he wanted to be acknowledged
-
+- [evrimoztamur](https://news.ycombinator.com/user?id=evrimoztamur), for [an orange site comment](https://news.ycombinator.com/item?id=37223889) explaining that looping might actually be a good idea
