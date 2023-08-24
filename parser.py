@@ -13,7 +13,7 @@ t_STRING = r'"([^"]*?)"'
 t_ID = '[%s][%s]*' % (schar, schar)
 t_LPAREN = r'\('
 t_RPAREN = r'\)'
-t_ignore_COMMENT = r'\#;.*'
+t_ignore_COMMENT = r'\;.*'
 t_ignore = ' \t\n'
 
 def t_error(t):

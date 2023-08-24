@@ -3,6 +3,7 @@ from os import path
 import importlib
 import slisp
 import sys
+import re
 
 def execute(text):
     parsed = slisp.parser.parse(text)
@@ -29,6 +30,13 @@ def runFile(filePath):
         for line in f.readlines():
             a = execute(line)
             print(a, end='')
+
+def template(file):
+    with open(file) as f:
+        pass
+    pass
+        
+    
 
 if __name__ == "__main__":
     if not not len(sys.argv[1:]):
