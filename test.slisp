@@ -2,4 +2,6 @@
 (func page (atag {0} "pages" {1}))
 (func li "<li>{0}</li>")
 (func ul "<ul>{0}</ul>")
+(li "hello")
+(li (page "green" "colour"))
 (ul (map li (eval "cat test.slisp")))
