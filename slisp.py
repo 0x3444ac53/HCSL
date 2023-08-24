@@ -32,12 +32,16 @@ def evaluate(args):
     if type(args) == str:
         return args
     func_name, args = args
+    
     try:
         return functions[func_name](args)
     except TypeError:
         pass
+
     try:
         function_def = functions[func_name][0]
+    except TypeError:
+        function_def = functions[func_name]
     except KeyError:
         print(f"undefined function {func_name}")
     
@@ -49,8 +53,8 @@ def evaluate(args):
         return evaluate(function_def).format(*args)
 
 functions = {
-        "func"    : lambda x: define_function(x),  # function_def
-        "exit"    : lambda x: exit(int(*x)),        # repl exit
+        "func"    : define_function,                  # function_def
+        "exit"    : lambda x: exit(int(*x)),            # repl exit
         "execute" : lambda x: run_file(*x, file=True),
         "eval"    : lambda x: run_file(*x),
         "debug"   : lambda : print_functions(),

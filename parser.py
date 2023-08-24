@@ -1,7 +1,6 @@
 from ply.lex import lex
 from ply.yacc import yacc 
 
-# Define the lexer
 tokens = ('ID',  # var name
           'RPAREN',     #)
           'LPAREN',     #(
@@ -14,7 +13,7 @@ t_STRING = r'"([^"]*?)"'
 t_ID = '[%s][%s]*' % (schar, schar)
 t_LPAREN = r'\('
 t_RPAREN = r'\)'
-t_ignore_COMMENT = r'\#;.*'
+t_ignore_COMMENT = r'\;.*'
 t_ignore = ' \t\n'
 
 def t_error(t):
@@ -23,36 +22,37 @@ def t_error(t):
 
 lexer = lex()
 
-def p_expression(p):
+def p_lisperal(p):
     '''
-    expression : LPAREN ID arguments RPAREN
-               | LPAREN lisperal RPAREN
-               | LPAREN expression RPAREN
+    lisperal : LPAREN lisperal arguments RPAREN
+             | LPAREN lisperal RPAREN
+             | ID 
+             | STRING
     '''
-    p[0] = [p[2], p[3]]
+    if len(p) == 5:
+        p[0] = [p[2], p[3]]
+    if len(p) == 4:
+        p[0] = [p[2]]
+    if len(p) == 2:
+        p[0] = p[1]
 
 def p_arguments(p):
     'arguments : argument arguments'
     p[0] = [p[1]] + p[2]
 
-def p_arguments_empty(p):
-    'arguments :'
-    p[0] = []
-
 def p_argument(p):
     '''
-    argument : ID
-             | expression
-             | lisperal 
-    '''
-    p[0] = p[1]
+    argument : lisperal
 
-def p_lisperal(p):
     '''
-    lisperal : STRING
-             | ID
-    '''
-    p[0] = p[1].replace('"', '')
+    if type(p[1]) == str:
+        p[0] = p[1].replace('"', '')
+    if type(p[1]) == list:
+        p[0] = p[1]
+
+def p_arguments_empty(p):
+    'arguments : '
+    p[0] = []
 
 def p_error(p):
     pass
