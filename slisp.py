@@ -1,4 +1,3 @@
-from parser import parser
 import subprocess
 
 def define_function(function_def):
@@ -26,12 +25,20 @@ def slisp_map(function, slist, sep='\n', join='\n'):
             map(function_def.format,
                 filter(lambda x: x, iterate_on)))
     
+def concat(args):
+    args = [i if type(i) == str else evaluate(i) for i in args]
+    return args[0].join(args[1:])
+
 def evaluate(args):
     if not args:
         return ""
     if type(args) == str:
         return args
-    func_name, args = args
+    
+    try:
+        func_name, args = args
+    except ValueError:
+        func_name = args[0]
     
     try:
         return functions[func_name](args)
@@ -48,7 +55,7 @@ def evaluate(args):
     args = [evaluate(i) for i in args]
     
     if type(function_def) == str:
-        return function_def.format(*args)
+        return bytes(function_def.format(*args), 'utf-8').decode('unicode_escape')
     if type(function_def) == list:
         return evaluate(function_def).format(*args)
 
@@ -58,5 +65,6 @@ functions = {
         "execute" : lambda x: run_file(*x, file=True),
         "eval"    : lambda x: run_file(*x),
         "debug"   : lambda : print_functions(),
-        "map"     : lambda x: slisp_map(*x)
+        "map"     : lambda x: slisp_map(*x),
+        "concat"  : concat
     }
