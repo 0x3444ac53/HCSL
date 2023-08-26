@@ -1,10 +1,10 @@
 import readline
 from os import path
 import importlib
-import slisp
+from . import slisp
 import sys
 import re
-import parser 
+from . import parser 
 
 def execute(text):
     parsed = parser.parser.parse(text)
