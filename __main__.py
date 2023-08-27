@@ -1,16 +1,18 @@
 import readline
 from os import path
 import importlib
-from . import slisp
 import sys
 import re
-from . import parser 
+from pprint import pprint
+from pathlib import Path
+from . import parser
+from . import slisp
 
 def execute(text):
     parsed = parser.parser.parse(text)
     evald = slisp.evaluate(parsed)
     if type(evald) == str and evald != 'None': 
-        return evald + '\n'
+        return evald
     else:
         return ''
 
@@ -32,20 +34,27 @@ def runFile(filePath):
             a = execute(line)
             print(a, end='')
 
-def template(file):
-    with open(file) as f:
-        code = re.findall(r'\$<.*>\$', f.read())
-    print(code)
+def template(file, outputDir='.'):
+    path = Path(file)
+    with open(path) as f:
+        source = f.read()
+    replacements = (
+        (i, execute(i[2:-2])) for i in re.findall(r'\$<.*>\$', source)
+        )
+    for i in replacements:
+        source = source.replace(i[0], i[1])
+    with open(Path(outputDir) / path.stem, 'w') as outfile:
+        outfile.write(source)
+    
 
     
-    
-
 if __name__ == "__main__":
     if not not len(files := sys.argv[1:]):
         for i in files:
-            if i.endswith('.html.slisp'):
-                template(i)
-            elif i.endswith('.slisp'):
-                runFile(i)
+            file = Path(i)
+            if file.suffixes.__len__() > 1 and file.suffix == '.slisp':
+                template(file, outputDir='docs')
+            elif file.suffix == '.slisp':
+                runFile(file)
     else:
         repl()
