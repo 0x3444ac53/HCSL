@@ -70,7 +70,7 @@ def slisp_map(args):
         except TypeError:
             function_def = functions[i]
             slisp_stack = list(map(function_def, slisp_stack))
-    return ""
+    return f"mapped {function_def}"
     
 def concat(join_on):
     global slisp_stack
