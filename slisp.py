@@ -77,9 +77,11 @@ def concat(join_on):
     returnval = ""
     join_on = [evaluate(i) if type(i) == list else i for i in join_on]
     if len(join_on) > 1:
+        rental = f"<!--- concat args={join_on} --->\n"
         for i in join_on[1:]:
             returnval = returnval + join_on[0] + i
     else:
+        rental = f"<!--- concat {join_on[0]} {stack=} --->\n"
         for i in range(len(slisp_stack)):
             if i > 0:
                 returnval = returnval + join_on[0] + slisp_stack.pop()
