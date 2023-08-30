@@ -16,7 +16,7 @@ All functions evaluate to a lisperal™, there are no variables, only functions 
 (func baz (foo (bar) "world")); -> "hello world"
 ```
 
-There are no `ints`, `floats`, or any of those mathy things that made you hate linear algebra, just strings. 
+There are no `ints`, `floats`, or any of those mathy things that made you hate linear algebra, just strings. I did add a stack though
 
 I recognise that this may be a difficult transition for some (and we know all about those),  and that edge cases may arise that require something other than strings. So, I have graciously included some built-in functions to aid those that have not yet ascended to a higher plane:
 
@@ -25,30 +25,18 @@ I recognise that this may be a difficult transition for some (and we know all ab
                       ; not very useful in scripts, 
                       ; but handy in the repl
 
-(execute "file name") ; will execute a file on your disk
-(eval "bash_code")    ; if you must
+(execute "bash code") ; will execute a file on your disk
 (debug)               ; prints functions definitions
-(map)                 ; see below
+(map foo)             ; maps a function 'foo' onto all values on the stack
+(push "hello")        ; pushes "hello" onto the stack
+(pop)                 ; pops value from stack
+(read "filePath")     ; will read each line of a file onto the stack
+(eval "(bar)")        ; evaluates code
+(source "filePath")   ; will load another slisp file into the current namespace
+(concat " ")          ; will concatinate all values on the stack with first 
+                      ; as a seperater
+(concat " " "1" "2")  ; will return "1 2" and leave the stack untouched
 ```
-
-## map
-There is one other built in, which is a map function, best explained by example
-```lisp
-; filename: map_exmaple.slisp
-(func ul "<ul>{0}</ul>")
-(func li "<li>{0}</li>")
-(ul (map li (eval "cat map_exmaple.slisp")))
-```
-will print:
-```
-<ul><li>(func atag "<a href='{0}' class='{1}'>{2}</a>")</li>
-<li>(func page (atag {0} "pages" {1}))</li>
-<li>(func li "<li>{0}</li>")</li>
-<li>(func ul "<ul>{0}</ul>")</li>
-<li>(ul (map li (eval "cat test.slisp")))</li></ul>
-```
-syntax is `(map func_name expression [sep=\n] [joiner=\n])`. So you can specify how it splits the string it iterates on, and also specify what string is used to rejoin it. I would like to pretend this is robust and perfectly implented, but this Language only has strings, so it's application is fairly limited. 
-
 
 # Acknowledgments
 

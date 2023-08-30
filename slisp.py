@@ -8,7 +8,7 @@ import re
 
 def define_function(function_def):
     functions[function_def[0]] = function_def[1:]
-    return functions[function_def[0]]
+    return f"{function_def=}"
 
 def run_file(args):
     script = evaluate(*args)
@@ -18,17 +18,22 @@ def run_file(args):
                              capture_output=True)
     return process.stdout
 
-def print_functions(x): 
+def print_functions(x):
     pprint(functions)
-    pprint(stack)
+    pprint(slisp_stack)
+    return f"Debugged with {print_functions}"
 
 def process_slisp_file(inFile):
+    print(f"Processing {inFile}")
     with open(inFile) as f:
         source = f.read()
-    replacements = (
-        (i, evaluate(parser.parser.parse(i[2:-2]))) for i in re.findall(r'\$<.*>\$', source))
-    for i in replacements:
-        source = source.replace(i[0], i[1])
+    try:
+        replacements = (
+            (i, evaluate(parser.parser.parse(i[2:-2]))) for i in re.findall(r'\$<.*>\$', source))
+        for i in replacements:
+            source = source.replace(i[0], i[1])
+    except Exception as e:
+        print(e)
     return source
 
 def template_single(inFile, outFile):
@@ -52,27 +57,41 @@ def template(args):
     args = [Path(evaluate(i))
                 for i in args]
     inFile, outFile = args
-    if inFile.is_dir() and outFile.is_dir():
+    if inFile.is_dir():
         return "\n".join([template_single(file, outFile / Path("/".join(file.parts[1:]))) for file in inFile.rglob("**/*")])
             
 
 def slisp_map(args):
-    function, args = args
-    function_def = functions[function][0]
-    iterate_on = evaluate(args).split('\n')
-    return '\n'.join(
-            map(function_def.format,
-                filter(lambda x: x, iterate_on)))
+    global slisp_stack
+    for i in args:
+        try:
+            function_def = functions[i][0]
+            slisp_stack = list(map(function_def.format, slisp_stack))
+        except TypeError:
+            function_def = functions[i]
+            slisp_stack = list(map(function_def, slisp_stack))
+    return ""
     
-def concat(args):
-    args = [i if type(i) == str else evaluate(i) for i in args]
-    return args[0].join(args[1:])
+def concat(join_on):
+    global slisp_stack
+    returnval = ""
+    join_on = [evaluate(i) if type(i) == list else i for i in join_on]
+    if len(join_on) > 1:
+        for i in join_on[1:]:
+            returnval = returnval + join_on[0] + i
+    else:
+        for i in range(len(slisp_stack)):
+            if i > 0:
+                returnval = returnval + join_on[0] + slisp_stack.pop()
+            else:
+                returnval = returnval + slisp_stack.pop()
+    return returnval
 
 def load_file(x):
     for file in x:
         with open(file) as f:
             for i in f.readlines():
-                stack.append(evaluate(parser.parser.parse(i)))
+                slisp_stack.append(i)
     return ""
 
 def source_file(x):
@@ -86,8 +105,11 @@ def source_file(x):
     return ""
 
 def shell_quote(x):
-    args = evaluate(x)
-    return shlex.quote(args)
+    return shlex.quote(evaluate(*x))
+
+def slisp_push(x):
+    slisp_stack.append(evaluate(*x))
+    return f"pushed {slisp_stack[-1]}"
 
 def evaluate(args):
     if not args:
@@ -99,7 +121,7 @@ def evaluate(args):
         func_name, args = args
     except ValueError:
         func_name = args[0]
-    
+
     try:
         return functions[func_name](args)
     except TypeError:
@@ -121,7 +143,7 @@ def evaluate(args):
     if type(function_def) == list:
         return evaluate(function_def).format(*args)
 
-stack = []
+slisp_stack = []
 
 functions = {
         "func"          : define_function,                  # function_def
@@ -131,9 +153,10 @@ functions = {
         "debug"         : print_functions,
         "map"           : lambda x: slisp_map(x),
         "concat"        : concat,
-        "shell_quote"   : lambda x: shell_quote(*x),
+        "shell_quote"   : shell_quote,
         "template"      : template,
-        "push"          : lambda x: stack.append(evaluate(*x)),
-        "pop"           : lambda x: stack.pop(),
-        "read"          : load_file
+        "push"          : slisp_push,
+        "pop"           : lambda x: slisp_stack.pop(),
+        "read"          : load_file,
+        "eval"          : lambda x: evaluate(parser.parser.parse(x))
     }
