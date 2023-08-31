@@ -31,7 +31,7 @@ def process_slisp_file(inFile):
         replacements = (
             (i, evaluate(parser.parser.parse(i[2:-2]))) for i in re.findall(r'\$<.*>\$', source))
         for i in replacements:
-            source = source.replace(i[0], i[1])
+            source = re.sub(re.escape(i[0]), i[1], source, count=1)
     except Exception as e:
         print(e)
     return source
@@ -77,11 +77,9 @@ def concat(join_on):
     returnval = ""
     join_on = [evaluate(i) if type(i) == list else i for i in join_on]
     if len(join_on) > 1:
-        rental = f"<!--- concat args={join_on} --->\n"
         for i in join_on[1:]:
             returnval = returnval + join_on[0] + i
     else:
-        rental = f"<!--- concat {join_on[0]} {stack=} --->\n"
         for i in range(len(slisp_stack)):
             if i > 0:
                 returnval = returnval + join_on[0] + slisp_stack.pop()
@@ -141,7 +139,7 @@ def evaluate(args):
     args = [evaluate(i) for i in args]
     
     if type(function_def) == str:
-        return bytes(function_def.format(*args), 'utf-8').decode('unicode_escape')
+        return function_def.format(*args, dq='"').replace("\\n", "\n")
     if type(function_def) == list:
         return evaluate(function_def).format(*args)
 
