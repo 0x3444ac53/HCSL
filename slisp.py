@@ -1,5 +1,5 @@
 import subprocess
-from pprint import pprint
+from pprint import pprint, pformat
 from . import parser
 from pathlib import Path
 import shlex
@@ -19,9 +19,7 @@ def run_file(args):
     return process.stdout
 
 def print_functions(x):
-    pprint(functions)
-    pprint(slisp_stack)
-    return f"Debugged with {print_functions}"
+    return f"Stack = {pformat(slisp_stack)}\n\n\nFunctions = {pformat(functions)}\n Thank you SB"
 
 def process_slisp_file(inFile):
     print(f"Processing {inFile}")
@@ -111,6 +109,10 @@ def slisp_push(x):
     slisp_stack.append(evaluate(*x))
     return f"pushed {slisp_stack[-1]}"
 
+def slisp_stack_dup(x):
+    slisp_stack.append(slisp_stack[-1])
+    return f"Duped {slisp_stack=}"
+
 def evaluate(args):
     if not args:
         return ""
@@ -158,5 +160,6 @@ functions = {
         "push"          : slisp_push,
         "pop"           : lambda x: slisp_stack.pop(),
         "read"          : load_file,
-        "eval"          : lambda x: evaluate(parser.parser.parse(x))
+        "eval"          : lambda x: evaluate(parser.parser.parse(x)),
+        "dup"           : slisp_stack_dup
     }
