@@ -44,6 +44,6 @@ I recognise that this may be a difficult transition for some (and we know all ab
 - Samie, who can create a pull request to link to herself if she so desires
 - [Crafting Interpreters](https://craftinginterpreters.com/) by [Bob Nystrom](https://github.com/munificent) for introducing me to little languages
 - My cat, [Ajax](https://www.instagram.com/p/CvT5ztQgaPs/), for reminding me to stretch
-- My faithful companion, [Chester](https://www.instagram.com/p/CusjwW4AKO6/) for 13 wonderful years (so far)
+- My faithful companion, [Chester](https://www.instagram.com/p/CusjwW4AKO6/) for 13 wonderful years (R.I.P. 10/07/2023)
 - Erik Decker, for answering my calls more often than he should, and because he wanted to be acknowledged
 - [evrimoztamur](https://news.ycombinator.com/user?id=evrimoztamur), for [an orange site comment](https://news.ycombinator.com/item?id=37223889) explaining that looping might actually be a good idea
